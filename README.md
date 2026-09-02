@@ -1,54 +1,58 @@
 # ✏️ Saja GPT
 
-Een oefen-app voor Nederlandse spelling (groep 6), met 2394 woorden uit 25 categorieën.
+A Dutch spelling practice app for Groep 6, with 2394 words across 25 categories.
 
-Werkt op iPad, telefoon, schoolcomputer en laptop — en onthoudt de sterwoorden.
+Runs on iPad, phone, school computer and laptop — and remembers the starred words.
 
----
-
-## Wat kan de app?
-
-- **25 categorieën** met in totaal 2394 woorden, plus "alle categorieën door elkaar".
-- **Nederlandse stem** uit meegeleverde MP3's, dus overal precies dezelfde uitspraak —
-  ook op een schoolcomputer zonder Nederlandse stem geïnstalleerd.
-- **Snelheid instellen** (🐢 langzaam → 🐇 snel), zowel op het startscherm als tijdens het oefenen.
-- **Letter-voor-letter feedback** bij een fout antwoord, zodat je precies ziet welke letter mis is.
-- **Vertaalhints** in het Engels 🇬🇧 en Arabisch 🇸🇦 na elk antwoord.
-- **Sterwoorden** ⭐ per categorie — moeilijke woorden worden automatisch met een ster gemarkeerd
-  en kunnen apart geoefend worden.
-- **Offline** te gebruiken nadat de app één keer geladen is.
-- **Installeerbaar** op het beginscherm van een iPad of telefoon (PWA).
+> The app's own interface is in Dutch, because that is the language Saja is
+> practising. This README, and any error messages, are in English.
 
 ---
 
-## 1. De app online zetten (GitHub Pages — gratis)
+## What the app does
 
-> Doe dit één keer, vanaf deze Mac.
+- **25 categories** with 2394 words in total, plus an "all categories mixed" option.
+- **Dutch voice** from bundled MP3 files, so the pronunciation is identical everywhere —
+  including a school computer with no Dutch voice installed.
+- **Adjustable speed** (🐢 slow → 🐇 fast), on both the start screen and during practice.
+- **Letter-by-letter feedback** on a wrong answer, showing exactly which letter is off.
+- **Translation hints** in English 🇬🇧 and Arabic 🇸🇦 after each answer.
+- **Starred words** ⭐ per category — words are starred automatically when they go wrong,
+  and can be practised separately.
+- **Works offline** once the app has loaded a first time.
+- **Installable** on the home screen of an iPad or phone (PWA).
 
-De map is al een git-repository met één commit. Wat nog moet gebeuren:
+---
 
-### a. Log in met je persoonlijke GitHub-account
+## 1. Publishing the app (GitHub Pages — free)
 
-In dit terminalvenster staat `GH_TOKEN` ingesteld voor je werkaccount. Dat moet eerst weg,
-anders blijft `gh` je werkaccount gebruiken:
+> Do this once, from this Mac.
+
+The folder is already a git repository with commits in place. What remains:
+
+### a. Sign in with your personal GitHub account
+
+This terminal has `GH_TOKEN` set for your work account. It has to be cleared first,
+otherwise `gh` keeps using the work account:
 
 ```bash
 unset GH_TOKEN
 gh auth login --hostname github.com --git-protocol https --web
 ```
 
-Kies bij de vragen: **GitHub.com** → **HTTPS** → **Yes** (git authenticeren) → **Login with a web browser**.
-Log in de browser in als **mansour1982** en plak de code die de terminal toont.
+Answer the prompts: **GitHub.com** → **HTTPS** → **Yes** (authenticate git) →
+**Login with a web browser**. Sign in as **mansour1982** and paste the code shown
+in the terminal.
 
-Controleer daarna:
+Then verify:
 
 ```bash
 gh auth status
 ```
 
-Er moet `Logged in to github.com account mansour1982` staan.
+It must report `Logged in to github.com account mansour1982`.
 
-### b. Repository maken en pushen
+### b. Create the repository and push
 
 ```bash
 cd ~/Desktop/saja-web
@@ -56,52 +60,51 @@ unset GH_TOKEN
 gh repo create saja-gpt --public --source=. --remote=origin --push
 ```
 
-> De repository moet **public** zijn, want GitHub Pages is alleen gratis voor publieke
-> repositories. Er staan geen persoonlijke gegevens in — alleen woordenlijsten en geluid.
+> The repository has to be **public**, because GitHub Pages is only free for public
+> repositories. Nothing personal is stored in it — only word lists and audio.
 
-### c. GitHub Pages aanzetten
+### c. Turn on GitHub Pages
 
 ```bash
 gh api -X POST repos/mansour1982/saja-gpt/pages \
   -f 'source[branch]=main' -f 'source[path]=/'
 ```
 
-Lukt dat niet, doe het dan met de hand:
+If that fails, do it by hand:
 **github.com/mansour1982/saja-gpt** → **Settings** → **Pages** →
 Source: **Deploy from a branch** → Branch: **main** / **(root)** → **Save**.
 
-Na een paar minuten staat de app op:
+After a few minutes the app is live at:
 
 ```
 https://mansour1982.github.io/saja-gpt/
 ```
 
-### d. Op de iPad zetten
+### d. Put it on the iPad
 
-Open die link in **Safari** → knop **Deel** → **Zet op beginscherm**.
-De app opent daarna als een echte app, zonder adresbalk.
+Open that link in **Safari** → **Share** button → **Add to Home Screen**.
+It then opens like a real app, with no address bar.
 
 ---
 
-## 2. Voortgang delen tussen apparaten (optioneel, gratis)
+## 2. Sharing progress between devices (optional, free)
 
-Zonder deze stap werkt alles gewoon, maar blijven de sterwoorden op één apparaat.
-Wil je dat de sterwoorden van de iPad ook op de laptop verschijnen, dan is er één
-gratis database nodig.
+Everything works without this step, but starred words stay on one device.
+To make the iPad's stars show up on the laptop too, you need one free database.
 
-### a. Firebase-project maken
+### a. Create a Firebase project
 
-1. Ga naar <https://console.firebase.google.com> en log in met een Google-account.
-2. **Add project** → naam bijv. `saja-gpt` → Google Analytics mag **uit** → **Create project**.
-3. Links in het menu: **Build** → **Realtime Database** → **Create Database**.
-4. Kies een locatie (bijv. *europe-west1*) → start in **test mode** → **Enable**.
-5. Bovenaan staat nu een adres zoals:
+1. Go to <https://console.firebase.google.com> and sign in with a Google account.
+2. **Add project** → name it e.g. `saja-gpt` → Google Analytics can be **off** → **Create project**.
+3. In the left menu: **Build** → **Realtime Database** → **Create Database**.
+4. Pick a location (e.g. *europe-west1*) → start in **test mode** → **Enable**.
+5. At the top you now see an address such as:
    `https://saja-gpt-default-rtdb.europe-west1.firebasedatabase.app`
-   Dat adres heb je zo nodig.
+   You will need that address in a moment.
 
-### b. Regels instellen
+### b. Set the rules
 
-Tabblad **Rules**, plak dit en klik **Publish**:
+Open the **Rules** tab, paste this and click **Publish**:
 
 ```json
 {
@@ -116,36 +119,47 @@ Tabblad **Rules**, plak dit en klik **Publish**:
 }
 ```
 
-> Iedereen die de geheime code raadt kan bij de sterwoorden. Kies daarom een code die
-> niemand gokt, bijvoorbeeld `saja-7f3k9q2m`. Er staan alleen woorden in — geen namen,
-> geen wachtwoorden.
+> Anyone who guesses the secret code can reach the starred words, so pick a code
+> nobody would guess, for example `saja-7f3k9q2m`. Only words are stored — no names,
+> no passwords.
 
-### c. In de app invullen
+### c. Enter it in the app
 
-Open de app → knop **☁️ Voortgang delen tussen apparaten** →
-vul het **Firebase-adres** en dezelfde **geheime code** in → **💾 Opslaan & testen**.
+Open the app → **☁️ Voortgang delen tussen apparaten** →
+fill in the **Firebase address** and the same **secret code** → **💾 Opslaan & testen**.
 
-Doe dat op **elk** apparaat met exact dezelfde twee waarden. Vanaf dan worden de
-sterwoorden samengevoegd: een woord dat op de iPad een ster krijgt, heeft hem ook
-op de laptop.
-
----
-
-## Woorden aanpassen
-
-De woordenlijst staat in `data.json`. Nieuwe woorden toevoegen betekent ook nieuwe
-geluidsbestanden maken. Vraag me daarvoor — het is één script.
+Do this on **every** device with exactly the same two values. From then on the starred
+words are merged: a word starred on the iPad is starred on the laptop too.
 
 ---
 
-## Bestanden
+## Changing the word list
 
-| Bestand | Wat het doet |
+The word list lives in `data.json`. Adding new words also means generating new audio
+files. Ask me for that — it is a single script.
+
+---
+
+## Files
+
+| File | Purpose |
 |---|---|
-| `index.html` | De schermen (start, oefenen, uitslag, instellingen) |
-| `styles.css` | De vormgeving |
-| `app.js` | Alle logica |
-| `data.json` | Woordenlijsten + vertalingen + geluidsnamen |
-| `audio/` | 2394 Nederlandse MP3's (20 MB) |
-| `sw.js` | Zorgt dat de app offline werkt |
-| `manifest.webmanifest` | Maakt installeren op het beginscherm mogelijk |
+| `index.html` | The screens (home, practice, result, settings) |
+| `styles.css` | Styling |
+| `app.js` | All application logic |
+| `data.json` | Word lists, translations and audio file names |
+| `audio/` | 2394 Dutch MP3 files (20 MB) |
+| `sw.js` | Makes the app work offline |
+| `manifest.webmanifest` | Allows installing to the home screen |
+
+---
+
+## The desktop version
+
+There is also a macOS version, `~/Desktop/dictee_mac2.py`, kept in step with this
+web app. It reads `Saja_spelling.csv` from the folder it is stored in, so it can be
+launched from any directory:
+
+```bash
+python3 ~/Desktop/dictee_mac2.py
+```
