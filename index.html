@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#5b6cff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Saja GPT">
+<title>Saja GPT</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app" class="app">
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p>Woorden laden…</p>
+  </div>
+</div>
+
+<!-- ============ HOME ============ -->
+<template id="tpl-home">
+  <div class="screen">
+    <header class="banner">
+      <h1>✏️ SAJA GPT 📚</h1>
+      <p class="sub">Oefen je spelling — je kunt het!</p>
+    </header>
+
+    <section class="card">
+      <h2>1️⃣ Welke categorie?</h2>
+      <select id="category" class="select"></select>
+      <p class="muted" id="cat-count"></p>
+      <p class="muted" id="star-note"></p>
+    </section>
+
+    <section class="card">
+      <h2>2️⃣ Welke woorden?</h2>
+      <div class="btn-row">
+        <button class="btn btn-blue grow" id="btn-all">Alle woorden</button>
+        <button class="btn btn-yellow grow" id="btn-star">⭐ Sterwoorden</button>
+      </div>
+      <p class="muted" id="count-hint"></p>
+    </section>
+
+    <section class="card">
+      <h2>3️⃣ Hoe snel praat de stem?</h2>
+      <div class="speed-row">
+        <span class="emoji">🐢</span>
+        <input type="range" id="speed" min="0.3" max="1.2" step="0.05" value="1">
+        <span class="emoji">🐇</span>
+        <span class="speed-label" id="speed-label"></span>
+      </div>
+      <div class="btn-row">
+        <label class="check">
+          <input type="checkbox" id="track" checked>
+          <span>Blijf oefenen tot alles goed is</span>
+        </label>
+        <button class="btn btn-purple" id="btn-testvoice">🔊 Probeer de stem</button>
+      </div>
+    </section>
+
+    <button class="btn btn-green big" id="btn-start">🚀 START!</button>
+
+    <button class="linkbtn" id="btn-settings">☁️ Voortgang delen tussen apparaten</button>
+    <p class="sync-state" id="sync-state"></p>
+  </div>
+</template>
+
+<!-- ============ PRACTICE ============ -->
+<template id="tpl-practice">
+  <div class="screen">
+    <div class="topbar">
+      <span class="chip" id="chip"></span>
+      <span class="score" id="score"></span>
+    </div>
+
+    <div class="progress"><div class="progress-fill" id="prog"></div></div>
+    <p class="muted" id="prog-text"></p>
+
+    <button class="btn btn-blue listen" id="btn-listen">🔊 LUISTER NOG EEN KEER</button>
+    <p class="muted center tip">Tip: druk op Enter bij een leeg vakje om het woord opnieuw te horen</p>
+
+    <div class="speed-row compact">
+      <span class="emoji">🐢</span>
+      <input type="range" id="speed2" min="0.3" max="1.2" step="0.05">
+      <span class="emoji">🐇</span>
+      <span class="speed-label" id="speed-label2"></span>
+    </div>
+
+    <p class="prompt" id="prompt"></p>
+    <div class="entry-border" id="entry-border">
+      <input type="text" id="entry" class="entry" autocomplete="off" autocorrect="off"
+             autocapitalize="off" spellcheck="false" enterkeyhint="done">
+    </div>
+
+    <div id="feedback" class="feedback"></div>
+
+    <div class="btn-row nav">
+      <button class="btn btn-purple grow" id="btn-prev">⏮️ Vorig woord</button>
+      <button class="btn btn-purple grow" id="btn-skip">Sla over ⏭️</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-grey" id="btn-stop">⬅️ Stop</button>
+      <button class="btn btn-yellow grow" id="btn-starword"></button>
+      <button class="btn btn-green grow" id="btn-action">✅ Nakijken</button>
+    </div>
+  </div>
+</template>
+
+<!-- ============ RESULT ============ -->
+<template id="tpl-result">
+  <div class="screen">
+    <div class="card result-top" id="result-top">
+      <div class="result-emoji" id="result-emoji"></div>
+      <h2 id="result-title"></h2>
+      <p id="result-compliment" class="italic"></p>
+      <p class="big-score" id="result-score"></p>
+    </div>
+    <div class="card" id="wrong-card">
+      <h2>📌 Deze woorden mag je nog oefenen</h2>
+      <div id="wrong-list" class="wordchips"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-blue grow" id="btn-again">🔄 Nog een keer</button>
+      <button class="btn btn-green grow" id="btn-home">🏠 Terug naar start</button>
+    </div>
+  </div>
+</template>
+
+<!-- ============ SETTINGS / SYNC ============ -->
+<template id="tpl-settings">
+  <div class="screen">
+    <header class="banner small">
+      <h1>☁️ Voortgang delen</h1>
+      <p class="sub">Gebruik dezelfde code op elk apparaat</p>
+    </header>
+
+    <section class="card">
+      <h2>Hoe werkt het?</h2>
+      <p class="muted">
+        Vul hieronder je Firebase-adres en een geheime code in. Op elk apparaat
+        waar je hetzelfde invult, worden de sterwoorden automatisch samengevoegd.
+        Zonder deze instelling blijft alles gewoon op dit apparaat bewaard.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Firebase-adres</h2>
+      <input type="url" id="fb-url" class="text-input" placeholder="https://mijn-project-default-rtdb.europe-west1.firebasedatabase.app">
+      <h2>Geheime code</h2>
+      <input type="text" id="fb-code" class="text-input" placeholder="bijv. saja-1234-geheim">
+      <div class="btn-row">
+        <button class="btn btn-green grow" id="btn-save-sync">💾 Opslaan &amp; testen</button>
+        <button class="btn btn-grey" id="btn-clear-sync">Wissen</button>
+      </div>
+      <p class="muted" id="sync-msg"></p>
+    </section>
+
+    <section class="card">
+      <h2>⭐ Sterwoorden op dit apparaat</h2>
+      <p class="muted" id="star-total"></p>
+      <div class="btn-row">
+        <button class="btn btn-blue grow" id="btn-sync-now">🔄 Nu synchroniseren</button>
+        <button class="btn btn-grey" id="btn-clear-stars">Sterwoorden wissen</button>
+      </div>
+    </section>
+
+    <button class="btn btn-green big" id="btn-back">⬅️ Terug</button>
+  </div>
+</template>
+
+<script src="app.js"></script>
+</body>
+</html>
