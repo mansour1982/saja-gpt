@@ -151,15 +151,39 @@ files. Ask me for that — it is a single script.
 | `audio/` | 2394 Dutch MP3 files (20 MB) |
 | `sw.js` | Makes the app work offline |
 | `manifest.webmanifest` | Allows installing to the home screen |
+| `desktop/` | The macOS version, its word list and its tests |
 
 ---
 
 ## The desktop version
 
-There is also a macOS version, `~/Desktop/dictee_mac2.py`, kept in step with this
-web app. It reads `Saja_spelling.csv` from the folder it is stored in, so it can be
-launched from any directory:
+There is also a macOS version in `desktop/`, kept in step with the web app.
+Both live in this one repository, so they cannot drift apart.
+
+Start it by double-clicking **`Saja GPT.command`**, or from a terminal:
 
 ```bash
-python3 ~/Desktop/dictee_mac2.py
+python3 desktop/dictee_mac2.py
 ```
+
+It can be launched from any directory: the word list and the starred words are
+searched for in the script folder, on the Desktop and in the current working
+directory, and an existing file always wins. That means there is only ever one
+copy of Saja's progress, however the app is started.
+
+`desktop/Saja_sterwoorden.json` holds those starred words. It is deliberately
+**not** in git, because it is personal progress rather than part of the app.
+
+### Running the tests
+
+```bash
+cd desktop/tests
+for t in test_regression test_translation test_speed test_arabic; do
+  python3 $t.py && echo "$t PASS"
+done
+```
+
+Each suite drives the real Tk interface in a temporary folder. They take a few
+minutes, because every one of them opens and closes real windows. Any unexpected
+dialog fails the run instead of blocking it.
+
