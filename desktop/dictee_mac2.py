@@ -687,11 +687,12 @@ class SpellingApp(tk.Tk):
             widget.destroy()
 
     def all_words(self):
-        """Every unique word across all categories."""
-        combined = set()
+        """Every word across all categories, keeping words that sit in more
+        than one category so they come up once per category."""
+        combined = []
         for words in self.categories.values():
-            combined.update(words)
-        return sorted(combined)
+            combined.extend(words)
+        return combined
 
     def starred_by_category(self):
         """Group the starred words by the category they came from."""

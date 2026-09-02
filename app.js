@@ -84,13 +84,9 @@ function categoryNames() {
 }
 
 function allWords() {
-  const seen = new Set();
   const out = [];
   for (const list of Object.values(state.data.categories)) {
-    for (const w of list) {
-      const k = w.toLowerCase();
-      if (!seen.has(k)) { seen.add(k); out.push(w); }
-    }
+    for (const w of list) out.push(w);
   }
   return out;
 }
@@ -101,7 +97,13 @@ function wordsForCategory(cat) {
 }
 
 function starredForCategory(cat) {
-  return wordsForCategory(cat).filter((w) => state.stars.has(w.toLowerCase()));
+  const seen = new Set();
+  return wordsForCategory(cat).filter((w) => {
+    const k = w.toLowerCase();
+    if (!state.stars.has(k) || seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
 }
 
 function translation(word, table) {
