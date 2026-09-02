@@ -1,3 +1,5 @@
 .DS_Store
 *.part
 __pycache__/
+# Saja's own progress: personal state, never committed.
+desktop/Saja_sterwoorden.json
